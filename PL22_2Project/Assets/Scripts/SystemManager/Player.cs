@@ -36,6 +36,8 @@ public class Player : MonoBehaviour {
 
 	public Slider moveSlider;
 
+	public GameObject line;
+
 	// Start is called before the first frame update
 	void Start() {
 		thisTransform = transform;
@@ -86,6 +88,8 @@ public class Player : MonoBehaviour {
 				moveTimer += Time.deltaTime;
 				speed = cuttingHorizontalSpeed;
 				if (moveTimer > cuttingHorizontalSpeed && SystemManager.RIGHT_MAX >= thisTransform.position.x + moveRange) {
+					var newLine = Instantiate(line, new Vector3(thisTransform.position.x + moveRange / 2, -0.5f, thisTransform.position.z), Quaternion.identity, SystemManager.instance.transform.GetChild(0));
+					newLine.transform.localScale = new Vector3(moveRange,0.05f,0.05f);
 					thisTransform.position += Vector3.right * moveRange;
 					moveTimer = 0;
 				}
@@ -93,6 +97,8 @@ public class Player : MonoBehaviour {
 				moveTimer += Time.deltaTime;
 				speed = cuttingHorizontalSpeed;
 				if (moveTimer > cuttingHorizontalSpeed && SystemManager.LEFT_MAX <= thisTransform.position.x - moveRange) {
+					var newLine = Instantiate(line, new Vector3(thisTransform.position.x - moveRange / 2, -0.5f, thisTransform.position.z), Quaternion.identity, SystemManager.instance.transform.GetChild(0));
+					newLine.transform.localScale = new Vector3(moveRange, 0.05f, 0.05f);
 					thisTransform.position += Vector3.left * moveRange;
 					moveTimer = 0;
 				}
@@ -100,6 +106,9 @@ public class Player : MonoBehaviour {
 				moveTimer += Time.deltaTime;
 				speed = cuttingVerticalSpeed;
 				if (moveTimer > cuttingVerticalSpeed && SystemManager.UP_MAX >= thisTransform.position.z + moveRange) {
+					var newLine = Instantiate(line, new Vector3(thisTransform.position.x, -0.5f, thisTransform.position.z + moveRange / 2), Quaternion.identity, SystemManager.instance.transform.GetChild(0));
+					newLine.transform.localScale = new Vector3(moveRange, 0.05f, 0.05f);
+					newLine.transform.Rotate(new Vector3(0, 90, 0));
 					thisTransform.position += Vector3.forward * moveRange;
 					moveTimer = 0;
 				}
@@ -107,6 +116,9 @@ public class Player : MonoBehaviour {
 				moveTimer += Time.deltaTime;
 				speed = cuttingVerticalSpeed;
 				if (moveTimer > cuttingVerticalSpeed && SystemManager.DOWN_MAX <= thisTransform.position.z - moveRange) {
+					var newLine = Instantiate(line, new Vector3(thisTransform.position.x, -0.5f, thisTransform.position.z - moveRange / 2), Quaternion.identity, SystemManager.instance.transform.GetChild(0));
+					newLine.transform.localScale = new Vector3(moveRange, 0.05f, 0.05f);
+					newLine.transform.Rotate(new Vector3(0, 90, 0));
 					thisTransform.position += Vector3.back * moveRange;
 					moveTimer = 0;
 				}
