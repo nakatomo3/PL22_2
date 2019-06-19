@@ -11,23 +11,23 @@ public class Player : MonoBehaviour {
 	/// <summary>
 	/// 通常時、左右移動までに必要な時間
 	/// </summary>
-	private float normalHorizontalSpeed = 0.3f;
+	private float normalHorizontalSpeed = 0.5f;
 
 	/// <summary>
 	/// 通常時、上下移動までに必要な時間
 	/// </summary>
-	private float normalVerticalSpeed = 0.3f;
+	private float normalVerticalSpeed = 0.5f;
 
 
 	/// <summary>
 	/// ハサミ時、左右移動までに必要な時間
 	/// </summary>
-	private float cuttingHorizontalSpeed = 0.5f;
+	private float cuttingHorizontalSpeed = 0.8f;
 
 	/// <summary>
 	/// ハサミ時、上下移動までに必要な時間
 	/// </summary>
-	private float cuttingVerticalSpeed = 0.5f;
+	private float cuttingVerticalSpeed = 0.8f;
 
 	private float moveTimer;
 	public const float moveRange = 0.5f;
@@ -38,14 +38,12 @@ public class Player : MonoBehaviour {
 
 	public GameObject line;
 
-	[SerializeField]
 	private enum Direction {
 		Up,
 		Right,
 		Left,
 		Down
 	}
-	[SerializeField]
 	private Direction lastDirection = Direction.Right;
 	public GameObject Side, Up, Down;
 	public GameObject SideScissors, UpScissors, DownScissors;
@@ -64,6 +62,8 @@ public class Player : MonoBehaviour {
 		} else {
 			isCuttingMode = false;
 		}
+
+		
 
 		if (isCuttingMode == false) {
 

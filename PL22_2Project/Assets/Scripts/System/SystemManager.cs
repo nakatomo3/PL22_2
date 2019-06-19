@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.UI;
 
 public class SystemManager : MonoBehaviour {
 
@@ -12,6 +13,9 @@ public class SystemManager : MonoBehaviour {
 	public static float RIGHT_MAX = 5;
 	public static float UP_MAX = 5;
 	public static float DOWN_MAX = -5;
+
+	public int score;
+	public Text scoreText;
 
 	public GameObject stageSquare;
 	private List<List<Rigidbody>> squareRigidbody;
@@ -92,6 +96,7 @@ public class SystemManager : MonoBehaviour {
 		gameTimer += Time.deltaTime;
 		CreateEnemy();
 
+		scoreText.text = "Score:" + score.ToString();
 	}
 
 	/// <summary>
@@ -243,7 +248,7 @@ public class SystemManager : MonoBehaviour {
 				}
 			}
 
-			Debug.Log(count+":"+dequeue+":"+isContinue);
+			//Debug.Log(count+":"+dequeue+":"+isContinue);
 			count++;
 
 			if (checkQueue.Count <= 0 || count >= 1000) {
@@ -252,56 +257,101 @@ public class SystemManager : MonoBehaviour {
 			}
 
 			if (isContinue == false) {
-				Debug.Log("穴状態となっている個所が見つかりました");
+				//Debug.Log("穴状態となっている個所が見つかりました");
 				break;
 			}
 		}
 
 		//isConnectで一番外側の線の内側を穴にして、それと繋がっている部分をすべて穴にする
-		int firstHoleX = -1, firstHoleY = -1;
-		for(int i = 0; i < isHorizontalLine.Count; i++) {
-			if (firstHoleX != -1) {
-				break;
-			}
-			for (int j = 0; j < isHorizontalLine.Count; j++) {
-				if(isConnect[i][j] == true) {
-					firstHoleX = i;
-					firstHoleY = j;
-					//squareRigidbody[firstHoleX][firstHoleY-1].useGravity = true;
-					break;
-				}
-			}
-		}
+		//int firstHoleX = -1, firstHoleY = -1;
+		//for(int i = 0; i < isHorizontalLine.Count; i++) {
+		//	if (firstHoleX != -1) {
+		//		break;
+		//	}
+		//	for (int j = 0; j < isHorizontalLine.Count; j++) {
+		//		if(isConnect[i][j] == true) {
+		//			firstHoleX = i;
+		//			firstHoleY = j;
+		//			//squareRigidbody[firstHoleX][firstHoleY-1].useGravity = true;
+		//			break;
+		//		}
+		//	}
+		//}
 		
 
-		bool isContinueHole = true;
-		int holeCounter = 0;
-		Queue<Vector2> holeQueue = new Queue<Vector2>();
-		holeQueue.Enqueue(new Vector2(x,y));
+		//bool isContinueHole = true;
+		//int holeCounter = 0;
+		//Queue<Vector2> holeQueue = new Queue<Vector2>();
+		//holeQueue.Enqueue(new Vector2(x,y));
 
-		while (isContinueHole) {
+		//while (isContinueHole) {
+		//	Vector2 dequeue = holeQueue.Dequeue();
+		//	squareRigidbody[(int)dequeue.x][(int)dequeue.y].useGravity = true;
+		//	if (dequeue.x > 0 && isVerticalLine[(int)dequeue.x][(int)dequeue.y] == false) {
+		//		squareRigidbody[(int)dequeue.x - 1][(int)dequeue.y].useGravity = true;
+		//		holeQueue.Enqueue(new Vector2(dequeue.x - 1, dequeue.y));
+		//	}
+		//	if (dequeue.x < isHorizontalLine.Count && isVerticalLine[(int)dequeue.x + 1][(int)dequeue.y] == false) {
+		//		squareRigidbody[(int)dequeue.x + 1][(int)dequeue.y].useGravity = true;
+		//		holeQueue.Enqueue(new Vector2(dequeue.x + 1, dequeue.y));
+		//	}
+		//	if (dequeue.y > 0 && isHorizontalLine[(int)dequeue.x][(int)dequeue.y] == false) {
+		//		squareRigidbody[(int)dequeue.x][(int)dequeue.y-1].useGravity = true;
+		//		holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y-1));
+		//	}
+		//	if (dequeue.y < isVerticalLine.Count && isHorizontalLine[(int)dequeue.x][(int)dequeue.y+1] == false) {
+		//		squareRigidbody[(int)dequeue.x][(int)dequeue.y+1].useGravity = true;
+		//		holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y+1));
+		//	}
+
+		//	holeCounter++;
+		//	if(holeCounter > 1000 || holeQueue.Count <= 0) {
+		//		break;
+		//	}
+		//}
+
+		List<List<bool>> isHole = new List<List<bool>>();
+		for(int i = 0; i < squareRigidbody.Count; i++) {
+			isHole.Add(new List<bool>());
+			for(int j = 0; j < squareRigidbody[i].Count; j++) {
+				isHole[i].Add(true);
+			}
+		}
+
+		Queue<Vector2> holeQueue = new Queue<Vector2>();
+		holeQueue.Enqueue(new Vector2(squareRigidbody.Count-1, squareRigidbody[0].Count-1));
+		int holeCount = 0;
+		while (holeCount < 1000) {
+
+
 			Vector2 dequeue = holeQueue.Dequeue();
-			squareRigidbody[(int)dequeue.x][(int)dequeue.y].useGravity = true;
-			if (dequeue.x > 0 && isVerticalLine[(int)dequeue.x][(int)dequeue.y] == false) {
-				squareRigidbody[(int)dequeue.x - 1][(int)dequeue.y].useGravity = true;
+
+			if (dequeue.x > 0 && isVerticalLine[(int)dequeue.x][(int)dequeue.y] == false && isHole[(int)dequeue.x - 1][(int)dequeue.y] == true) {
+				isHole[(int)dequeue.x - 1][(int)dequeue.y] = false;
 				holeQueue.Enqueue(new Vector2(dequeue.x - 1, dequeue.y));
 			}
-			if (dequeue.x < isHorizontalLine.Count && isVerticalLine[(int)dequeue.x + 1][(int)dequeue.y] == false) {
-				squareRigidbody[(int)dequeue.x + 1][(int)dequeue.y].useGravity = true;
+			if (dequeue.x < isVerticalLine.Count-1 && isVerticalLine[(int)dequeue.x + 1][(int)dequeue.y] == false && isHole[(int)dequeue.x + 1][(int)dequeue.y] == true) {
+				isHole[(int)dequeue.x + 1][(int)dequeue.y] = false;
 				holeQueue.Enqueue(new Vector2(dequeue.x + 1, dequeue.y));
 			}
-			if (dequeue.y > 0 && isHorizontalLine[(int)dequeue.x][(int)dequeue.y] == false) {
-				squareRigidbody[(int)dequeue.x][(int)dequeue.y-1].useGravity = true;
-				holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y-1));
+			if (dequeue.y > 0 && isHorizontalLine[(int)dequeue.x][(int)dequeue.y] == false && isHole[(int)dequeue.x][(int)dequeue.y - 1] == true) {
+				isHole[(int)dequeue.x][(int)dequeue.y-1] = false;
+				holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y - 1));
 			}
-			if (dequeue.y < isVerticalLine.Count && isHorizontalLine[(int)dequeue.x][(int)dequeue.y+1] == false) {
-				squareRigidbody[(int)dequeue.x][(int)dequeue.y+1].useGravity = true;
-				holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y+1));
+			if (dequeue.y < isVerticalLine.Count-1 && isHorizontalLine[(int)dequeue.x][(int)dequeue.y + 1] == false && isHole[(int)dequeue.x][(int)dequeue.y + 1] == true) {
+				isHole[(int)dequeue.x][(int)dequeue.y+1] = false;
+				holeQueue.Enqueue(new Vector2(dequeue.x, dequeue.y + 1));
 			}
-
-			holeCounter++;
-			if(holeCounter > 1000 || holeQueue.Count <= 0) {
+			holeCount++;
+			if (holeQueue.Count <= 0) {
 				break;
+			}
+		}
+		for(int i = 0; i < isHole.Count; i++) {
+			for(int j = 0; j < isHole[i].Count; j++) {
+				if(isHole[i][j] == true) {
+					squareRigidbody[i][j].useGravity = true;
+				}
 			}
 		}
 
