@@ -18,7 +18,7 @@ public class SystemManager : MonoBehaviour {
 	public Text scoreText;
 
 	public GameObject stageSquare;
-	private List<List<Rigidbody>> squareRigidbody;
+	public List<List<Rigidbody>> squareRigidbody;
 
 	/// <summary>
 	/// 敵の出現時間のリスト
@@ -29,6 +29,7 @@ public class SystemManager : MonoBehaviour {
 	/// 敵の出現場所(x軸のみ)のリスト
 	/// </summary>
 	List<float> enemyPosX;
+	List<float> enemyPosY;
 
 	/// <summary>
 	/// 敵のタイプ
@@ -52,6 +53,10 @@ public class SystemManager : MonoBehaviour {
 
 	private List<List<bool>> isHole;
 
+	[HideInInspector]
+	public int HP = 3;
+	public Text hpText;
+
 	private void Awake() {
 		instance = this;
 	}
@@ -59,6 +64,7 @@ public class SystemManager : MonoBehaviour {
 	void Start() {
 		enemyTimer = new List<float>();
 		enemyPosX = new List<float>();
+		enemyPosY = new List<float>();
 		enemyType = new List<EnemyType>();
 
 		isHorizontalLine = new List<List<bool>>();
@@ -97,6 +103,7 @@ public class SystemManager : MonoBehaviour {
 		CreateEnemy();
 
 		scoreText.text = "Score:" + score.ToString();
+		hpText.text = "HP:"+HP.ToString();
 	}
 
 	/// <summary>
@@ -117,7 +124,8 @@ public class SystemManager : MonoBehaviour {
 				var values = csvReader.ReadLine().Split(',');
 				enemyTimer.Add(float.Parse(values[0]));
 				enemyPosX.Add(float.Parse(values[1]));
-				enemyType.Add((EnemyType)int.Parse(values[2]));
+				enemyPosY.Add(float.Parse(values[2]));
+				enemyType.Add((EnemyType)int.Parse(values[3]));
 			}
 		} catch {
 			Debug.LogError("CSVの読み込みに失敗しました。\nよくあるミス：,を行末に入れている、必要な情報を入れていない、一行目を消している");
@@ -131,7 +139,7 @@ public class SystemManager : MonoBehaviour {
 	/// </summary>
 	private void CreateEnemy() {
 		if(enemyCreateCounter < enemyTimer.Count && enemyTimer[enemyCreateCounter] < gameTimer) {
-			Instantiate(enemyObjects[(int)enemyType[enemyCreateCounter]], new Vector3(enemyPosX[enemyCreateCounter], 0, UP_MAX - 2), Quaternion.identity, transform);
+			Instantiate(enemyObjects[(int)enemyType[enemyCreateCounter]], new Vector3(enemyPosX[enemyCreateCounter], 0, enemyPosY[enemyCreateCounter]), Quaternion.identity, transform);
 			enemyCreateCounter++;
 			enemyCounter++;
 		}
