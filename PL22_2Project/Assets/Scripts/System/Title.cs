@@ -12,7 +12,7 @@ public class Title : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		if (Input.anyKey) {
-			PlayerPrefs.SetInt("stage", 0);
+			PlayerPrefs.SetInt("stageNum", 1);
 			SceneManager.LoadScene("Main");
 		}
 	}

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour {
 
 	private float attackTimer = 0;
-	private float attackInterval = 10f;
+	[HideInInspector]
+	public static float attackInterval = 20f;
 
 	public Rigidbody rigidbody;
 

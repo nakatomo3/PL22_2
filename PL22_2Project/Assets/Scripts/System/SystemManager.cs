@@ -58,6 +58,10 @@ public class SystemManager : MonoBehaviour {
 	public int HP = 3;
 	public Text hpText;
 
+	private float timer;
+
+	public Text last;
+
 	private void Awake() {
 		instance = this;
 	}
@@ -147,6 +151,22 @@ public class SystemManager : MonoBehaviour {
 			Instantiate(enemyObjects[(int)enemyType[enemyCreateCounter]], new Vector3(enemyPosX[enemyCreateCounter], 0, enemyPosY[enemyCreateCounter]), Quaternion.identity, transform);
 			enemyCreateCounter++;
 			enemyCounter++;
+		}
+
+		last.text = "残り：" + (enemyTimer.Count - enemyCounter).ToString();
+		
+		if(enemyCounter >= enemyTimer.Count) {
+			timer += Time.deltaTime;
+			if (timer >= Enemy.attackInterval) {
+				Debug.Log(PlayerPrefs.GetInt("stageNum"));
+				if (PlayerPrefs.GetInt("stageNum") >= 2) {
+					SceneManager.LoadScene("Title");
+				} else {
+
+					PlayerPrefs.SetInt("stageNum", PlayerPrefs.GetInt("stageNum") + 1);
+					SceneManager.LoadScene("Main");
+				}
+			}
 		}
 	}
 
