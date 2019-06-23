@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SystemManager : MonoBehaviour {
 
@@ -104,6 +105,10 @@ public class SystemManager : MonoBehaviour {
 
 		scoreText.text = "Score:" + score.ToString();
 		hpText.text = "HP:"+HP.ToString();
+
+		if(HP <= 0) {
+			SceneManager.LoadScene("Title");
+		}
 	}
 
 	/// <summary>
