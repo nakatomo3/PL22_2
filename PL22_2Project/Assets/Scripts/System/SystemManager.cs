@@ -111,7 +111,7 @@ public class SystemManager : MonoBehaviour {
 		hpText.text = "HP:"+HP.ToString();
 
 		if(HP <= 0) {
-			SceneManager.LoadScene("Title");
+			SceneManager.LoadScene("GameOver");
 		}
 	}
 
